@@ -3,5 +3,6 @@
   "dest": "../../dist/table-filter",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "allowedNonPeerDependencies": ["@angulartoolsdr/control-material"]
 }

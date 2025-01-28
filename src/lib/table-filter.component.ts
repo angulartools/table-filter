@@ -23,7 +23,7 @@ export class TableFilterComponent implements OnInit {
 
   formBuscar: UntypedFormGroup;
   listaOperador: any[];
-  translateData: boolean = true;
+  translateData = true;
 
   // Filtros por data
   PERIODO_HOJE = 1;
