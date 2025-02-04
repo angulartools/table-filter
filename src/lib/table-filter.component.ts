@@ -2,14 +2,14 @@ import { NgClass, NgStyle } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { ControlMaterialFilterComponent, ControlMaterialSelectComponent, ControlMaterialDateTimeComponent } from '@angulartoolsdr/control-material';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslationPipe, TranslationService } from '@angulartoolsdr/translation';
 import { debounceTime } from 'rxjs';
 import moment from 'moment';
 
 @Component({
   selector: 'lib-table-filter',
   templateUrl: './table-filter.component.html',
-  imports: [FormsModule, ReactiveFormsModule, NgStyle, NgClass, ControlMaterialFilterComponent, ControlMaterialSelectComponent, TranslateModule, ControlMaterialDateTimeComponent]
+  imports: [FormsModule, ReactiveFormsModule, NgStyle, NgClass, ControlMaterialFilterComponent, ControlMaterialSelectComponent, TranslationPipe, ControlMaterialDateTimeComponent]
 })
 export class TableFilterComponent implements OnInit {
 
@@ -39,7 +39,7 @@ export class TableFilterComponent implements OnInit {
   maxDateInicio;
   maxDateFim;
 
-  translate = inject(TranslateService) ;
+  translate = inject(TranslationService) ;
 
   constructor(private formBuilder: FormBuilder) {
 
