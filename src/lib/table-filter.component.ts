@@ -19,11 +19,17 @@ export class TableFilterComponent implements OnInit {
   @Input() listaPeriodo: any[] = [];
   @Input() defaultPeriodoIndex = -1;
 
+  @Input('loading')
+  set _loading(value: boolean) {
+    this.loading = value;
+  }
+
   @Output() onFiltroChange: EventEmitter<any> = new EventEmitter();
 
   formBuscar: UntypedFormGroup;
   listaOperador: any[];
   translateData = true;
+  loading = false;
 
   // Filtros por data
   PERIODO_HOJE = 1;
