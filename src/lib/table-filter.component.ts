@@ -74,6 +74,14 @@ export class TableFilterComponent implements OnInit {
     });
   }
 
+  disableFields() {
+    if (this.loading && this.formBuscar !== null) {
+      this.formBuscar.disable({emitEvent: false});
+    } else {
+      this.formBuscar.enable({emitEvent: false});
+    }
+  }
+
   ngOnInit(): void {
     if (this.defaultPeriodoIndex > -1) {
       this.formBuscar.get('periodo').setValue(this.listaPeriodo[this.defaultPeriodoIndex]);
