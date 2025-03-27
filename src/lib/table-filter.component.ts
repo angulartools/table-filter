@@ -22,6 +22,7 @@ export class TableFilterComponent implements OnInit {
   @Input('loading')
   set _loading(value: boolean) {
     this.loading = value;
+    this.disableFields();
   }
 
   @Output() onFiltroChange: EventEmitter<any> = new EventEmitter();
