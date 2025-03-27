@@ -21,8 +21,7 @@ export class TableFilterComponent implements OnInit {
 
   @Input('loading')
   set _loading(value: boolean) {
-    this.loading = value;
-    this.disableFields();
+    this.loading = value;    
   }
 
   @Output() onFiltroChange: EventEmitter<any> = new EventEmitter();
@@ -73,14 +72,6 @@ export class TableFilterComponent implements OnInit {
     this.formBuscar.get('searchControl')?.valueChanges.pipe(debounceTime(1000)).subscribe(form => {
       this.changePesquisa();
     });
-  }
-
-  disableFields() {
-    if (this.loading && this.formBuscar !== null) {
-      this.formBuscar.disable({emitEvent: false});
-    } else {
-      this.formBuscar.enable({emitEvent: false});
-    }
   }
 
   ngOnInit(): void {
