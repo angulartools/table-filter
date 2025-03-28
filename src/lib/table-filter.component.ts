@@ -22,6 +22,7 @@ export class TableFilterComponent implements OnInit {
   @Input('loading')
   set _loading(value: boolean) {
     this.loading = value;    
+    this.disableFields();
   }
 
   @Output() onFiltroChange: EventEmitter<any> = new EventEmitter();
@@ -72,6 +73,26 @@ export class TableFilterComponent implements OnInit {
     this.formBuscar.get('searchControl')?.valueChanges.pipe(debounceTime(1000)).subscribe(form => {
       this.changePesquisa();
     });
+  }
+
+  disableFields() {
+    if (this.formBuscar != null) {
+      if (this.loading) {
+        this.formBuscar.get('searchControl')?.disable({emitEvent: false});
+        this.formBuscar.get('operatorControl')?.disable({emitEvent: false});
+        this.formBuscar.get('periodo')?.disable({emitEvent: false});
+        this.formBuscar.get('dataInicio')?.disable({emitEvent: false});
+        this.formBuscar.get('dataFim')?.disable({emitEvent: false});
+        this.formBuscar.updateValueAndValidity({onlySelf: true, emitEvent: false});
+      } else {
+        this.formBuscar.get('searchControl')?.enable({emitEvent: false});
+        this.formBuscar.get('operatorControl')?.enable({emitEvent: false});
+        this.formBuscar.get('periodo')?.enable({emitEvent: false});
+        this.formBuscar.get('dataInicio')?.enable({emitEvent: false});
+        this.formBuscar.get('dataFim')?.enable({emitEvent: false});
+        this.formBuscar.updateValueAndValidity({onlySelf: true, emitEvent: false});
+      }
+    }
   }
 
   ngOnInit(): void {
