@@ -1,10 +1,10 @@
 {
   "name": "@angulartoolsdr/table-filter",
-  "version": "20.3.5",
+  "version": "20.3.6",
   "peerDependencies": {
-    "@angular/common": "20.3.5",
-    "@angular/core": "20.3.5",
-    "@angulartoolsdr/translation": "20.3.5"
+    "@angular/common": "20.3.6",
+    "@angular/core": "20.3.6",
+    "@angulartoolsdr/translation": "20.3.6"
   },
   "dependencies": {
     "tslib": "^2.8.1"
