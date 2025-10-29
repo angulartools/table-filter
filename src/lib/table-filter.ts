@@ -1,4 +1,3 @@
-import { NgClass, NgStyle } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { ControlMaterialFilterComponent, ControlMaterialSelectComponent, ControlMaterialDateTimeComponent } from '@angulartoolsdr/control-material';
@@ -7,11 +6,11 @@ import { debounceTime } from 'rxjs';
 import moment from 'moment';
 
 @Component({
-  selector: 'lib-table-filter',
-  templateUrl: './table-filter.component.html',
-  imports: [FormsModule, ReactiveFormsModule, NgStyle, NgClass, ControlMaterialFilterComponent, ControlMaterialSelectComponent, TranslationPipe, ControlMaterialDateTimeComponent]
+  selector: 'te-table-filter',
+  templateUrl: './table-filter.html',
+  imports: [FormsModule, ReactiveFormsModule, ControlMaterialFilterComponent, ControlMaterialSelectComponent, TranslationPipe, ControlMaterialDateTimeComponent]
 })
-export class TableFilterComponent implements OnInit {
+export class TableFilter implements OnInit {
 
   @Input() showBotaoFiltro = true;
   @Input() showOperador = true;
