@@ -8,7 +8,7 @@
       </lib-control-material-filter>
     </div>
     @if (showOperador) {
-      <div class="px-1" style="max-width: 120px">
+      <div class="px-1" style="min-width: 110px; max-width: 120px">
         <lib-control-material-select  [smaller]="true" label="{{'OPERADOR' | translate}}" [selectList]="listaOperador"
           [translateData]="true" bindLabel="label"
           (selectItem)="changeOperador()" [disableClear]="true">
@@ -17,7 +17,7 @@
       </div>
     }
     @if (showFiltroPeriodo) {
-      <div class="px-1" style="max-width: 180px">
+      <div class="px-1" style="min-width: 170px; max-width: 180px">
         <lib-control-material-select [disableClear]="true" [smaller]="true" label="{{'PERIODO' | translate}}" [selectList]="listaPeriodo"
           [translateData]="true" bindLabel="label"
           (selectItem)="changePeriodo($event)" (clearItem)="changePeriodo($event)">
@@ -26,7 +26,7 @@
       </div>
     }
     @if (showFiltroPeriodo && formBuscar.get('periodo').value?.isSelecaoPeriodo) {
-      <div class="px-1" style="max-width: 150px">
+      <div class="px-1" style="min-width: 140px; max-width: 150px">
         <lib-control-material-date-time [smaller]="true" label="{{'FILTRO_DE' | translate}}" [showTime]="false"
           [minDate]="minDateInicio" [maxDate]="maxDateInicio" (selectDate)="changePesquisa()">
           <input formControlName="dataInicio" />
@@ -34,7 +34,7 @@
       </div>
     }
     @if (showFiltroPeriodo && formBuscar.get('periodo').value?.isSelecaoPeriodo) {
-      <div class="px-1" style="max-width: 150px">
+      <div class="px-1" style="min-width: 140px; max-width: 150px">
         <lib-control-material-date-time [smaller]="true" label="{{'FILTRO_ATE' | translate}}" [showTime]="false"
           [minDate]="minDateFim" [maxDate]="maxDateFim" (selectDate)="changePesquisa()">
           <input formControlName="dataFim" />
