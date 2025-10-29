@@ -6,7 +6,7 @@ import { debounceTime } from 'rxjs';
 import moment from 'moment';
 
 @Component({
-  selector: 'te-table-filter',
+  selector: 'lib-table-filter',
   templateUrl: './table-filter.html',
   imports: [FormsModule, ReactiveFormsModule, ControlMaterialFilterComponent, ControlMaterialSelectComponent, TranslationPipe, ControlMaterialDateTimeComponent]
 })

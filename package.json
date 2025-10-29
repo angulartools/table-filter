@@ -1,6 +1,6 @@
 {
   "name": "@angulartoolsdr/table-filter",
-  "version": "20.3.7-custom.1",
+  "version": "20.3.7-custom.2",
   "peerDependencies": {
     "@angular/common": "20.3.7",
     "@angular/core": "20.3.7",
