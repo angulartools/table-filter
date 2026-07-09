@@ -1,0 +1,44 @@
+.btn-operador-menu {
+  background-color: #ffffff !important;
+  border: 1px solid #dcdfe1 !important;
+  border-radius: 8px !important;
+  height: 40px !important;
+  padding: 0 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-family: inherit !important;
+  box-shadow: none !important;
+  text-transform: none !important;
+  margin-top: 0px !important; // Align by the top
+
+  .lbl-operador {
+    color: #8898aa !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+  }
+
+  .val-operador {
+    color: #0f172a !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+  }
+
+  i {
+    color: #8898aa !important;
+    font-size: 12px !important;
+  }
+}
+
+::ng-deep .modo-menu,
+::ng-deep .mat-mdc-menu-panel,
+::ng-deep .mat-menu-panel {
+
+  .mat-mdc-menu-item,
+  .mat-menu-item {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #334155 !important;
+    text-transform: none !important;
+  }
+}
