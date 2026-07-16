@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, input, output, signal, computed, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output, signal, computed, effect, afterNextRender } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { debounceTime } from 'rxjs';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import moment from 'moment-timezone';
 import { ControlMaterialComponent, ControlMaterialSelectComponent, ControlMaterialDateTimeComponent } from '@angulartoolsdr/control-material';
 import { TranslationPipe, TranslationService } from '@angulartoolsdr/translation';
@@ -12,17 +12,7 @@ import { MatButton } from '@angular/material/button';
   selector: 'lib-table-filter',
   templateUrl: './table-filter.html',
   styleUrls: ['./table-filter.scss'],
-  imports: [
-    ReactiveFormsModule,
-    ControlMaterialComponent,
-    ControlMaterialSelectComponent,
-    ControlMaterialDateTimeComponent,
-    TranslationPipe,
-    MatMenu,
-    MatMenuItem,
-    MatMenuTrigger,
-    MatButton
-  ],
+  imports: [ReactiveFormsModule, ControlMaterialComponent, ControlMaterialSelectComponent, ControlMaterialDateTimeComponent, TranslationPipe, MatMenu, MatMenuItem, MatMenuTrigger, MatButton],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableFilter {
@@ -53,6 +43,9 @@ export class TableFilter {
     { id: this.OPERADOR_E, label: 'OPERADOR_E' },
     { id: this.OPERADOR_OR, label: 'OPERADOR_OU' }
   ];
+
+  /** Garante que onFiltroChange só dispare após a inicialização completa do componente */
+  private isInitialized = signal(false);
 
   minDateInicio = signal<Date | null>(null);
   minDateFim = signal<Date | null>(null);
@@ -109,19 +102,28 @@ export class TableFilter {
   );
 
   constructor() {
-    // Escuta mudanças de pesquisa de forma reativa
-    let isPrimeiraExecucao = true;
 
+    // --- Effects de SETUP (executam durante a inicialização) ---
+
+    // Seta valor padrão de período baseado no index
     effect(() => {
-      const valor = this.searchSignal();
+      const idx = Number(this.defaultPeriodoIndex());
+      const lista = this.listaPeriodoInterna();
 
-      if (isPrimeiraExecucao) {
-        isPrimeiraExecucao = false;
-        return; // Ignora o disparo automático do carregamento
+      if (idx > -1 && lista && lista[idx]) {
+        const itemEncontrado = lista[idx];
+        // emitEvent: true para acionar o effect do período e calcular as datas
+        this.formBuscar.get('periodo')?.setValue(itemEncontrado, { emitEvent: true });
       }
-
-      this.changePesquisa(); // Dispara com segurança apenas nas digitações seguintes
     });
+
+    // Controla o estado de disabled baseado no input loading
+    effect(() => {
+      const isLoading = this.loading();
+      this.toggleFormState(isLoading);
+    });
+
+    // --- Effect do PERÍODO (atualiza datas, mas só emite para fora após inicialização) ---
 
     effect(() => {
       const item = this.periodoSelecionado();
@@ -130,7 +132,9 @@ export class TableFilter {
       if (!item) {
         this.formBuscar.get('dataInicio')?.setValue(null, { emitEvent: false });
         this.formBuscar.get('dataFim')?.setValue(null, { emitEvent: false });
-        this.changePesquisa();
+        if (this.isInitialized()) {
+          this.changePesquisa();
+        }
         return;
       }
 
@@ -148,42 +152,36 @@ export class TableFilter {
           this.maxDateInicio.set(new Date(dFim.getFullYear(), dFim.getMonth(), dFim.getDate()));
         }
 
-        if (dataInicioVal && dataFimVal) {
+        if (this.isInitialized() && dataInicioVal && dataFimVal) {
           this.changePesquisa();
         }
       } else {
-        // Se for um período pré-definido (Hoje, Ontem, etc.)
+        // Período pré-definido: sempre atualiza as datas internas
         const periodoCalculado = this.getPeriodoDate(item.periodo);
-
-        // Atualiza os controles sem disparar eventos infinitos no formulário
         this.formBuscar.get('dataInicio')?.setValue(periodoCalculado.dataInicio, { emitEvent: false });
         this.formBuscar.get('dataFim')?.setValue(periodoCalculado.dataFim, { emitEvent: false });
 
+        if (this.isInitialized()) {
+          this.changePesquisa();
+        }
+      }
+    });
+
+    // --- Effect do SEARCH (só reage após inicialização) ---
+
+    effect(() => {
+      this.searchSignal(); // lê o sinal para criar dependência reativa
+      if (this.isInitialized()) {
         this.changePesquisa();
       }
     });
 
-    // Seta valor padrão baseado no index (Apenas efeitos colaterais externos)
-    effect(() => {
-      // Garante a conversão para número caso venha como String do HTML
-      const idx = Number(this.defaultPeriodoIndex());
-
-      // Lê a lista interna computada (que contém os períodos padrão ou os enviados)
-      const lista = this.listaPeriodoInterna();
-
-      if (idx > -1 && lista && lista[idx]) {
-        const itemEncontrado = lista[idx];
-
-        // ATENÇÃO: Precisamos disparar o evento para que o 'periodoSelecionado()' 
-        // e o fluxo reativo das datas e pesquisas aconteçam na inicialização.
-        this.formBuscar.get('periodo')?.setValue(itemEncontrado, { emitEvent: true });
-      }
-    });
-
-    // Controla o estado de disabled baseado no input loading
-    effect(() => {
-      const isLoading = this.loading();
-      this.toggleFormState(isLoading);
+    // --- Marca inicialização como concluída após o primeiro render ---
+    // afterNextRender garante que todos os effects de setup já executaram
+    afterNextRender(() => {
+      this.isInitialized.set(true);
+      // Disparo único consolidado no final da inicialização
+      this.changePesquisa();
     });
 
   }
