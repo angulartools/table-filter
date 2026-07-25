@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import moment from 'moment-timezone';
-import { ControlMaterialComponent, ControlMaterialSelectComponent, ControlMaterialDateTimeComponent } from '@angulartoolsdr/control-material';
+import { ControlMaterialComponent, ControlMaterialDateTimeComponent } from '@angulartoolsdr/control-material';
 import { TranslationPipe, TranslationService } from '@angulartoolsdr/translation';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatButton } from '@angular/material/button';
@@ -12,7 +12,7 @@ import { MatButton } from '@angular/material/button';
   selector: 'lib-table-filter',
   templateUrl: './table-filter.html',
   styleUrls: ['./table-filter.scss'],
-  imports: [ReactiveFormsModule, ControlMaterialComponent, ControlMaterialSelectComponent, ControlMaterialDateTimeComponent, TranslationPipe, MatMenu, MatMenuItem, MatMenuTrigger, MatButton],
+  imports: [ReactiveFormsModule, ControlMaterialComponent, ControlMaterialDateTimeComponent, TranslationPipe, MatMenu, MatMenuItem, MatMenuTrigger, MatButton],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableFilter {
