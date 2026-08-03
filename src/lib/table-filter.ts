@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, output, signal, computed, effect, afterNextRender } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output, signal, computed, effect, afterNextRender, untracked } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -132,7 +132,7 @@ export class TableFilter {
       if (!item) {
         this.formBuscar.get('dataInicio')?.setValue(null, { emitEvent: false });
         this.formBuscar.get('dataFim')?.setValue(null, { emitEvent: false });
-        if (this.isInitialized()) {
+        if (untracked(this.isInitialized)) {
           this.changePesquisa();
         }
         return;
@@ -152,7 +152,7 @@ export class TableFilter {
           this.maxDateInicio.set(new Date(dFim.getFullYear(), dFim.getMonth(), dFim.getDate()));
         }
 
-        if (this.isInitialized() && dataInicioVal && dataFimVal) {
+        if (untracked(this.isInitialized) && dataInicioVal && dataFimVal) {
           this.changePesquisa();
         }
       } else {
@@ -161,7 +161,7 @@ export class TableFilter {
         this.formBuscar.get('dataInicio')?.setValue(periodoCalculado.dataInicio, { emitEvent: false });
         this.formBuscar.get('dataFim')?.setValue(periodoCalculado.dataFim, { emitEvent: false });
 
-        if (this.isInitialized()) {
+        if (untracked(this.isInitialized)) {
           this.changePesquisa();
         }
       }
@@ -171,7 +171,7 @@ export class TableFilter {
 
     effect(() => {
       this.searchSignal(); // lê o sinal para criar dependência reativa
-      if (this.isInitialized()) {
+      if (untracked(this.isInitialized)) {
         this.changePesquisa();
       }
     });
