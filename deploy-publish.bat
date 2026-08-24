@@ -17,23 +17,36 @@ if exist package-lock.json (
     del /f /q package-lock.json
 )
 
-REM 2. Executar comandos do Git
+REM 2. Garante .gitignore para node_modules/package-lock nunca irem pro commit
+if not exist .gitignore (
+    echo Criando .gitignore...
+    (
+        echo /node_modules
+        echo package-lock.json
+        echo *.log
+        echo .angular/
+    )>.gitignore
+)
+
+REM 3. Executar comandos do Git (nunca interrompe o script, so avisa)
 echo Fazendo commit e push...
 git add .
 git commit -m "Update Version"
+if errorlevel 1 echo Aviso: nada para commitar ou commit falhou, seguindo...
 git push
+if errorlevel 1 echo Aviso: git push falhou, seguindo com build/publish...
 
-REM 3. Executar npm i e ng build
+REM 4. Executar npm i e ng build
 echo Rodando npm i...
 call npm i --force
 echo rodando ng build...
 call npx ng build
 
-REM 4. Pega o nome da pasta atual
+REM 5. Pega o nome da pasta atual
 for %%I in ("%cd%") do set "CUR_DIR=%%~nxI"
 echo Nome do diretório: %CUR_DIR%
 
-REM 5. Sobe 2 níveis e entra na pasta dist\NOME_DIRETORIO
+REM 6. Sobe 2 níveis e entra na pasta dist\NOME_DIRETORIO
 cd ..
 cd ..
 cd dist\%CUR_DIR%
