@@ -23,6 +23,7 @@ export class TableFilter {
   // Inputs e Outputs (Modernos)
   showBotaoFiltro = input(true);
   showOperador = input(true);
+  showAtivoInativo = input(false)
   showFiltroPeriodo = input(true);
   listaPeriodo = input<any[]>([]);
   defaultPeriodoIndex = input(-1);
@@ -42,6 +43,12 @@ export class TableFilter {
   listaOperador = [
     { id: this.OPERADOR_E, label: 'OPERADOR_E' },
     { id: this.OPERADOR_OR, label: 'OPERADOR_OU' }
+  ];
+
+  listaAtivoInativo = [
+    { id: null, label: 'TODOS' },
+    { id: true, label: 'SIM' },
+    { id: false, label: 'NAO' },
   ];
 
   /** Garante que onFiltroChange só dispare após a inicialização completa do componente */
@@ -72,12 +79,17 @@ export class TableFilter {
     searchControl: new FormControl<string | null>(null),
     operatorControl: new FormControl<any>(this.listaOperador[1]),
     periodo: new FormControl<any>(null),
+    ativo: new FormControl<any>(this.listaAtivoInativo[0]),
     dataInicio: new FormControl<any>(null),
     dataFim: new FormControl<any>(null)
   });
 
   periodoValue = toSignal(this.formBuscar.get('periodo')!.valueChanges, {
     initialValue: this.formBuscar.get('periodo')?.value
+  });
+
+  ativoInativoValue = toSignal(this.formBuscar.get('ativo')!.valueChanges, {
+    initialValue: this.formBuscar.get('ativo')?.value
   });
 
   operatorValue = toSignal(this.formBuscar.get('operatorControl')!.valueChanges, {
@@ -214,6 +226,11 @@ export class TableFilter {
     this.formBuscar.get('periodo')?.setValue(item);
   }
 
+  setAtivoInativo(item: any) {
+    this.formBuscar.get('ativo')?.setValue(item);
+    this.changePesquisa();
+  }
+
   changePesquisa() {
     let dataFim = this.formBuscar.get('dataFim')?.value;
     if (dataFim && typeof dataFim.toDate === 'function') {
@@ -224,6 +241,7 @@ export class TableFilter {
     this.onFiltroChange.emit({
       filtro: this.formBuscar.get('searchControl')?.value,
       operador: this.formBuscar.get('operatorControl')?.value?.id,
+      ativo: this.formBuscar.get('ativo')?.value?.id,
       dataInicio: this.formBuscar.get('dataInicio')?.value,
       dataFim: dataFim,
       periodo: this.formBuscar.get('periodo')?.value

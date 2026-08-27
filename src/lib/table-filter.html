@@ -33,6 +33,26 @@
       </div>
     }
 
+    @if (showAtivoInativo()) {
+      <div style="flex-shrink: 0;">
+        <button type="button" mat-button [matMenuTriggerFor]="ativoInativodMenu" class="btn-operador-menu" [disabled]="loading()">
+          <span class="lbl-operador">{{ 'ATIVO' | translate }}</span>
+          <span class="val-operador">
+            <!-- Corrigido: usando ativoInativoValue() Signal -->
+            {{ ativoInativoValue()?.label | translate }}
+          </span>
+          <i class="fas fa-caret-down"></i>
+        </button>
+        <mat-menu #ativoInativodMenu="matMenu" class="modo-menu">
+          @for (item of listaAtivoInativo; track item.id) { 
+          <button mat-menu-item (click)="setAtivoInativo(item)">
+            {{ item.label | translate }}
+          </button>
+          }
+        </mat-menu>
+      </div>
+    }
+
     @if (showFiltroPeriodo()) {
       <div style="flex-shrink: 0;">
         <button type="button" mat-button [matMenuTriggerFor]="periodMenu" class="btn-operador-menu" [disabled]="loading()">
