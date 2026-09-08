@@ -1,95 +1,118 @@
-@if (showBotaoFiltro()) {
+@if (loading()) {
 
-  <form [formGroup]="formBuscar"
-    style="width: 100%; display: flex; align-items: flex-start; gap: 12px; margin: 0 !important; padding: 0 !important;"
-    class="mb-1">
-
+  <div style="width: 100%; display: flex; align-items: flex-start; gap: 12px; margin: 0 !important; padding: 0 !important;" class="mb-1">
     <div style="flex: 1;">
-      <lib-control-material label="{{'PESQUISAR_TABELA' | translate}}" [smaller]="true"
-        placeholder="{{'INFORME_FILTRO_PESQUISAR' | translate}}">
-        <input formControlName="searchControl">
-      </lib-control-material>
+      <lib-skeleton height="40px" width="100%" marginTop="0px"></lib-skeleton>
     </div>
-
     @if (showOperador()) {
       <div style="flex-shrink: 0;">
-        <button type="button" mat-button [matMenuTriggerFor]="operatorMenu" class="btn-operador-menu"
-          [disabled]="loading()">
-          <span class="lbl-operador">{{ 'OPERADOR' | translate }}</span>
-          <span class="val-operador">
-            <!-- Corrigido: usando operatorValue() Signal -->
-            {{ operatorValue()?.id === OPERADOR_E ? ('OPERADOR_E' | translate) : ('OPERADOR_OU' | translate) }}
-          </span>
-          <i class="fas fa-caret-down"></i>
-        </button>
-        <mat-menu #operatorMenu="matMenu" class="modo-menu">
-          <button mat-menu-item (click)="setOperador(OPERADOR_E)">
-            {{ 'OPERADOR_E' | translate }}
-          </button>
-          <button mat-menu-item (click)="setOperador(OPERADOR_OR)">
-            {{ 'OPERADOR_OU' | translate }}
-          </button>
-        </mat-menu>
+        <lib-skeleton height="40px" width="110px" marginTop="0px"></lib-skeleton>
       </div>
     }
-
     @if (showAtivoInativo()) {
       <div style="flex-shrink: 0;">
-        <button type="button" mat-button [matMenuTriggerFor]="ativoInativodMenu" class="btn-operador-menu" [disabled]="loading()">
-          <span class="lbl-operador">{{ 'ATIVO' | translate }}</span>
-          <span class="val-operador">
-            <!-- Corrigido: usando ativoInativoValue() Signal -->
-            {{ ativoInativoValue()?.label | translate }}
-          </span>
-          <i class="fas fa-caret-down"></i>
-        </button>
-        <mat-menu #ativoInativodMenu="matMenu" class="modo-menu">
-          @for (item of listaAtivoInativo; track item.id) { 
-          <button mat-menu-item (click)="setAtivoInativo(item)">
-            {{ item.label | translate }}
-          </button>
-          }
-        </mat-menu>
+        <lib-skeleton height="40px" [width]="showTodosAtivoInativo() ? '220px' : '150px'" marginTop="0px"></lib-skeleton>
       </div>
     }
-
     @if (showFiltroPeriodo()) {
       <div style="flex-shrink: 0;">
-        <button type="button" mat-button [matMenuTriggerFor]="periodMenu" class="btn-operador-menu" [disabled]="loading()">
-          <span class="lbl-operador">{{ 'PERIODO' | translate }}</span>
-          <span class="val-operador">
-            <!-- Corrigido: usando periodoValue() Signal -->
-            {{ periodoValue() ? (periodoValue().label | translate) : '' }}
-          </span>
-          <i class="fas fa-caret-down"></i>
-        </button>
-        <mat-menu #periodMenu="matMenu" class="modo-menu">
-          @for (item of listaPeriodoInterna(); track item.id) {
-          <button mat-menu-item (click)="setPeriodo(item)">
-            {{ item.label | translate }}
-          </button>
-          }
-        </mat-menu>
+        <lib-skeleton height="40px" width="160px" marginTop="0px"></lib-skeleton>
       </div>
     }
-
-    <!-- Corrigido: Usando o computed exibirSelecaoPeriodo() para reagir instantaneamente -->
     @if (showFiltroPeriodo() && exibirSelecaoPeriodo()) {
-
       <div style="width: 150px; flex-shrink: 0;">
-        <lib-control-material-date-time [smaller]="true" label="{{'FILTRO_DE' | translate}}" [showTime]="false"
-          [minDate]="minDateInicio()" [maxDate]="maxDateInicio()" (selectDate)="changePesquisa()">
-          <input formControlName="dataInicio">
-        </lib-control-material-date-time>
+        <lib-skeleton height="40px" width="100%" marginTop="0px"></lib-skeleton>
       </div>
-
       <div style="width: 150px; flex-shrink: 0;">
-        <lib-control-material-date-time [smaller]="true" label="{{'FILTRO_ATE' | translate}}" [showTime]="false"
-          [minDate]="minDateFim()" [maxDate]="maxDateFim()" (selectDate)="changePesquisa()">
-          <input formControlName="dataFim">
-        </lib-control-material-date-time>
+        <lib-skeleton height="40px" width="100%" marginTop="0px"></lib-skeleton>
       </div>
     }
+  </div>
 
-  </form>
+} @else {
+
+  @if (showBotaoFiltro()) {
+
+    <form [formGroup]="formBuscar"
+      style="width: 100%; display: flex; align-items: flex-start; gap: 12px; margin: 0 !important; padding: 0 !important;"
+      class="mb-1">
+
+      <div style="flex: 1;">
+        <lib-control-material label="{{'PESQUISAR_TABELA' | translate}}" [smaller]="true"
+          placeholder="{{'INFORME_FILTRO_PESQUISAR' | translate}}">
+          <input formControlName="searchControl">
+        </lib-control-material>
+      </div>
+
+      @if (showOperador()) {
+        <div style="flex-shrink: 0;">
+          <button type="button" mat-button [matMenuTriggerFor]="operatorMenu" class="btn-operador-menu">
+            <span class="lbl-operador">{{ 'OPERADOR' | translate }}</span>
+            <span class="val-operador">
+              <!-- Corrigido: usando operatorValue() Signal -->
+              {{ operatorValue()?.id === OPERADOR_E ? ('OPERADOR_E' | translate) : ('OPERADOR_OU' | translate) }}
+            </span>
+            <i class="fas fa-caret-down"></i>
+          </button>
+          <mat-menu #operatorMenu="matMenu" class="modo-menu">
+            <button mat-menu-item (click)="setOperador(OPERADOR_E)">
+              {{ 'OPERADOR_E' | translate }}
+            </button>
+            <button mat-menu-item (click)="setOperador(OPERADOR_OR)">
+              {{ 'OPERADOR_OU' | translate }}
+            </button>
+          </mat-menu>
+        </div>
+      }
+
+      @if (showAtivoInativo()) {
+        <mat-button-toggle-group [value]="ativoInativoValue()" (change)="setAtivoInativo($event)" class="status-button-toggle-group">
+          @if (showTodosAtivoInativo()) {
+            <mat-button-toggle [value]="null">{{ labelAtivoTodos() | translate }}</mat-button-toggle>
+          }
+          <mat-button-toggle [value]="true">{{ 'ATIVOS' | translate }}</mat-button-toggle>
+          <mat-button-toggle [value]="false">{{ 'INATIVOS' | translate }}</mat-button-toggle>
+        </mat-button-toggle-group>
+      }
+
+      @if (showFiltroPeriodo()) {
+        <div style="flex-shrink: 0;">
+          <button type="button" mat-button [matMenuTriggerFor]="periodMenu" class="btn-operador-menu">
+            <span class="lbl-operador">{{ 'PERIODO' | translate }}</span>
+            <span class="val-operador">
+              <!-- Corrigido: usando periodoValue() Signal -->
+              {{ periodoValue() ? (periodoValue().label | translate) : '' }}
+            </span>
+            <i class="fas fa-caret-down"></i>
+          </button>
+          <mat-menu #periodMenu="matMenu" class="modo-menu">
+            @for (item of listaPeriodoInterna(); track item.id) {
+            <button mat-menu-item (click)="setPeriodo(item)">
+              {{ item.label | translate }}
+            </button>
+            }
+          </mat-menu>
+        </div>
+      }
+
+      <!-- Corrigido: Usando o computed exibirSelecaoPeriodo() para reagir instantaneamente -->
+      @if (showFiltroPeriodo() && exibirSelecaoPeriodo()) {
+
+        <div style="width: 150px; flex-shrink: 0;">
+          <lib-control-material-date-time [smaller]="true" label="{{'FILTRO_DE' | translate}}" [showTime]="false"
+            [minDate]="minDateInicio()" [maxDate]="maxDateInicio()" (selectDate)="changePesquisa()">
+            <input formControlName="dataInicio">
+          </lib-control-material-date-time>
+        </div>
+
+        <div style="width: 150px; flex-shrink: 0;">
+          <lib-control-material-date-time [smaller]="true" label="{{'FILTRO_ATE' | translate}}" [showTime]="false"
+            [minDate]="minDateFim()" [maxDate]="maxDateFim()" (selectDate)="changePesquisa()">
+            <input formControlName="dataFim">
+          </lib-control-material-date-time>
+        </div>
+      }
+
+    </form>
+  }
 }

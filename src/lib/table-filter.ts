@@ -7,12 +7,14 @@ import { ControlMaterialComponent, ControlMaterialDateTimeComponent } from '@ang
 import { TranslationPipe, TranslationService } from '@angulartoolsdr/translation';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatButton } from '@angular/material/button';
+import { MatButtonToggleGroup, MatButtonToggle } from '@angular/material/button-toggle';
+import { Skeleton } from '@angulartoolsdr/shared-utils';
 
 @Component({
   selector: 'lib-table-filter',
   templateUrl: './table-filter.html',
   styleUrls: ['./table-filter.scss'],
-  imports: [ReactiveFormsModule, ControlMaterialComponent, ControlMaterialDateTimeComponent, TranslationPipe, MatMenu, MatMenuItem, MatMenuTrigger, MatButton],
+  imports: [Skeleton, MatButtonToggleGroup, MatButtonToggle, ReactiveFormsModule, ControlMaterialComponent, ControlMaterialDateTimeComponent, TranslationPipe, MatMenu, MatMenuItem, MatMenuTrigger, MatButton],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableFilter {
@@ -23,12 +25,15 @@ export class TableFilter {
   // Inputs e Outputs (Modernos)
   showBotaoFiltro = input(true);
   showOperador = input(true);
-  showAtivoInativo = input(false)
+  showAtivoInativo = input(false);
+  showTodosAtivoInativo = input(false);
   showFiltroPeriodo = input(true);
   listaPeriodo = input<any[]>([]);
   defaultPeriodoIndex = input(-1);
   loading = input(false);
   onFiltroChange = output<any>();
+  ativoExterno = input<any>(null);
+  labelAtivoTodos = input<string>('TODAS');
 
   // Constantes
   readonly PERIODO_HOJE = 1;
@@ -43,12 +48,6 @@ export class TableFilter {
   listaOperador = [
     { id: this.OPERADOR_E, label: 'OPERADOR_E' },
     { id: this.OPERADOR_OR, label: 'OPERADOR_OU' }
-  ];
-
-  listaAtivoInativo = [
-    { id: null, label: 'TODOS' },
-    { id: true, label: 'SIM' },
-    { id: false, label: 'NAO' },
   ];
 
   /** Garante que onFiltroChange só dispare após a inicialização completa do componente */
@@ -79,7 +78,7 @@ export class TableFilter {
     searchControl: new FormControl<string | null>(null),
     operatorControl: new FormControl<any>(this.listaOperador[1]),
     periodo: new FormControl<any>(null),
-    ativo: new FormControl<any>(this.listaAtivoInativo[0]),
+    ativo: new FormControl<any>(null),
     dataInicio: new FormControl<any>(null),
     dataFim: new FormControl<any>(null)
   });
@@ -133,6 +132,21 @@ export class TableFilter {
     effect(() => {
       const isLoading = this.loading();
       this.toggleFormState(isLoading);
+    });
+
+    // Sincroniza o campo 'ativo' quando o pai altera o valor externamente.
+    // Apenas atualização visual — changePesquisa() NÃO é chamado aqui porque
+    // o pai já dispara sua própria pesquisa ao alterar filtroAtivo.
+    effect(() => {
+      const valorExterno = this.ativoExterno();
+
+      const valorAtual = untracked(() => this.formBuscar.get('ativo')?.value);
+      if (valorExterno !== valorAtual) {
+        // emitEvent: true é necessário para que ativoInativoValue (toSignal de valueChanges)
+        // atualize e o mat-button-toggle-group reflita o novo valor no template.
+        // O loop infinito é prevenido pelo check valorExterno !== valorAtual acima.
+        this.formBuscar.get('ativo')?.setValue(valorExterno, { emitEvent: true });
+      }
     });
 
     // --- Effect do PERÍODO (atualiza datas, mas só emite para fora após inicialização) ---
@@ -227,7 +241,7 @@ export class TableFilter {
   }
 
   setAtivoInativo(item: any) {
-    this.formBuscar.get('ativo')?.setValue(item);
+    this.formBuscar.get('ativo')?.setValue(item.value);
     this.changePesquisa();
   }
 
@@ -241,7 +255,7 @@ export class TableFilter {
     this.onFiltroChange.emit({
       filtro: this.formBuscar.get('searchControl')?.value,
       operador: this.formBuscar.get('operatorControl')?.value?.id,
-      ativo: this.formBuscar.get('ativo')?.value?.id,
+      ativo: this.formBuscar.get('ativo')?.value,
       dataInicio: this.formBuscar.get('dataInicio')?.value,
       dataFim: dataFim,
       periodo: this.formBuscar.get('periodo')?.value

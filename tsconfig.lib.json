@@ -9,8 +9,15 @@
     "inlineSources": true,
     "types": [],
     "paths": {
-      "@angulartoolsdr/translation": ["../../dist/translation"],
-      "@angulartoolsdr/control-material": ["../../dist/control-material"],
+      "@angulartoolsdr/translation": [
+        "../../dist/translation"
+      ],
+      "@angulartoolsdr/shared-utils": [
+        "../../dist/shared-utils"
+      ],
+      "@angulartoolsdr/control-material": [
+        "../../dist/control-material"
+      ],
     }
   },
   "angularCompilerOptions": {
