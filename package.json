@@ -1,12 +1,12 @@
 {
   "name": "@angulartoolsdr/table-filter",
-  "version": "22.1.7",
+  "version": "22.2.1",
   "peerDependencies": {
-    "@angular/common": "22.1.7",
-    "@angular/core": "22.1.7"
+    "@angular/common": "22.2.1",
+    "@angular/core": "22.2.1"
   },
   "dependencies": {
-    "@angulartoolsdr/control-material": "22.1.7",
+    "@angulartoolsdr/control-material": "22.2.1",
     "tslib": "^2.8.1"
   },
   "sideEffects": false
