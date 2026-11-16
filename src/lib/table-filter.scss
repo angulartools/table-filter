@@ -92,3 +92,29 @@
     }
   }
 }
+
+:host ::ng-deep {
+  lib-control-material,
+  lib-control-material-date-time {
+    display: block;
+
+    .mat-mdc-form-field {
+      display: block;
+      line-height: normal;
+    }
+
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none !important;
+    }
+
+    .mat-mdc-text-field-wrapper {
+      height: 40px !important;
+    }
+
+    .mat-mdc-form-field-infix {
+      min-height: 40px !important;
+      padding-top: 8px !important;
+      padding-bottom: 8px !important;
+    }
+  }
+}

@@ -158,6 +158,10 @@ export class TableFilter {
       if (!item) {
         this.formBuscar.get('dataInicio')?.setValue(null, { emitEvent: false });
         this.formBuscar.get('dataFim')?.setValue(null, { emitEvent: false });
+        this.minDateInicio.set(null);
+        this.minDateFim.set(null);
+        this.maxDateInicio.set(null);
+        this.maxDateFim.set(null);
         if (untracked(this.isInitialized)) {
           this.changePesquisa();
         }
@@ -183,6 +187,10 @@ export class TableFilter {
         }
       } else {
         // Período pré-definido: sempre atualiza as datas internas
+        this.minDateInicio.set(null);
+        this.minDateFim.set(null);
+        this.maxDateInicio.set(null);
+        this.maxDateFim.set(null);
         const periodoCalculado = this.getPeriodoDate(item.periodo);
         this.formBuscar.get('dataInicio')?.setValue(periodoCalculado.dataInicio, { emitEvent: false });
         this.formBuscar.get('dataFim')?.setValue(periodoCalculado.dataFim, { emitEvent: false });
@@ -243,6 +251,23 @@ export class TableFilter {
   setAtivoInativo(item: any) {
     this.formBuscar.get('ativo')?.setValue(item.value);
     this.changePesquisa();
+  }
+
+  selecionarDataInicio(value: Date | null) {
+    this.formBuscar.get('dataInicio')?.setValue(value, { emitEvent: false });
+    this.minDateFim.set(value ? this.toCalendarDate(value) : null);
+    this.changePesquisa();
+  }
+
+  selecionarDataFim(value: Date | null) {
+    this.formBuscar.get('dataFim')?.setValue(value, { emitEvent: false });
+    this.maxDateInicio.set(value ? this.toCalendarDate(value) : null);
+    this.changePesquisa();
+  }
+
+  private toCalendarDate(value: Date | { toDate(): Date }): Date {
+    const date = value instanceof Date ? value : value.toDate();
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   }
 
   changePesquisa() {

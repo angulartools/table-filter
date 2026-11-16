@@ -1,6 +1,6 @@
 @if (loading()) {
 
-  <div style="width: 100%; display: flex; align-items: flex-start; gap: 12px; margin: 0 !important; padding: 0 !important;" class="mb-1">
+  <div style="width: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 !important; padding: 0 !important;" class="mb-1">
     <div style="flex: 1;">
       <lib-skeleton height="40px" width="100%" marginTop="0px"></lib-skeleton>
     </div>
@@ -34,10 +34,10 @@
   @if (showBotaoFiltro()) {
 
     <form [formGroup]="formBuscar"
-      style="width: 100%; display: flex; align-items: flex-start; gap: 12px; margin: 0 !important; padding: 0 !important;"
+      style="width: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 !important; padding: 0 !important;"
       class="mb-1">
 
-      <div style="flex: 1;">
+      <div style="flex: 1 1 200px; min-width: 180px;">
         <lib-control-material label="{{'PESQUISAR_TABELA' | translate}}" [smaller]="true"
           placeholder="{{'INFORME_FILTRO_PESQUISAR' | translate}}">
           <input formControlName="searchControl">
@@ -100,14 +100,14 @@
 
         <div style="width: 150px; flex-shrink: 0;">
           <lib-control-material-date-time [smaller]="true" label="{{'FILTRO_DE' | translate}}" [showTime]="false"
-            [minDate]="minDateInicio()" [maxDate]="maxDateInicio()" (selectDate)="changePesquisa()">
+            [minDate]="minDateInicio()" [maxDate]="maxDateInicio()" (selectDate)="selecionarDataInicio($event)">
             <input formControlName="dataInicio">
           </lib-control-material-date-time>
         </div>
 
         <div style="width: 150px; flex-shrink: 0;">
           <lib-control-material-date-time [smaller]="true" label="{{'FILTRO_ATE' | translate}}" [showTime]="false"
-            [minDate]="minDateFim()" [maxDate]="maxDateFim()" (selectDate)="changePesquisa()">
+            [minDate]="minDateFim()" [maxDate]="maxDateFim()" (selectDate)="selecionarDataFim($event)">
             <input formControlName="dataFim">
           </lib-control-material-date-time>
         </div>
